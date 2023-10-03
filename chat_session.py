@@ -29,23 +29,17 @@ class ChatSession():
             #max_tokens = Max_tokens
         )
         return response
-    def start(self):  #only send the prompt and receive the response
+    def start(self, message=None):  # send the prompt and receive the response, user input is optional
         self.__insertSystemPrompt()
         temp_history = self.__chat_history
-            
+        if message is not None:
+            temp_history.append({"role": "user", "content": message})
         response = self.__generateResponse(temp_history=temp_history)
-        temp_history.append({"role": "assistant", "content":response['choices'][0]['message']['content']})
+        temp_history.append({"role": "assistant", "content": response['choices'][0]['message']['content']})
         self.__chat_history = temp_history
         return response
         
-    def startWithUserInput(self,message):  #send the prompt and an user input to receive the response
-        self.__insertSystemPrompt()
-        temp_history = self.__chat_history
-        temp_history.append({"role": "user", "content": message})
-        response = self.__generateResponse(temp_history=temp_history)
-        temp_history.append({"role": "assistant", "content":response['choices'][0]['message']['content']})
-        self.__chat_history = temp_history
-        return response
+    
     
     def send(self,message):  #send the message from user and receive the response
         temp_history = self.__chat_history
